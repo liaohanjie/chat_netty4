@@ -22,7 +22,7 @@ public class BufferFactory {
 	 * @return
 	 */
 	public static ByteBuf getBuffer() {
-		ByteBuf buffer = bufAllocator.buffer();
+		ByteBuf buffer = bufAllocator.heapBuffer();
 		buffer = buffer.order(BYTE_ORDER);
 		return buffer;
 	}
@@ -33,7 +33,7 @@ public class BufferFactory {
 	 * @return
 	 */
 	public static ByteBuf getBuffer(byte[] bytes) {
-		ByteBuf buffer = bufAllocator.ioBuffer();
+		ByteBuf buffer = bufAllocator.heapBuffer();
 		buffer = buffer.order(BYTE_ORDER);
 		buffer.writeBytes(bytes);
 		return buffer;
