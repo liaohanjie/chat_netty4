@@ -6,8 +6,8 @@ import com.cn.common.core.model.Result;
 import com.cn.common.core.session.Session;
 import com.cn.common.module.ModuleId;
 import com.cn.common.module.player.PlayerCmd;
-import com.cn.common.module.player.message.LoginRequest;
-import com.cn.common.module.player.message.RegisterRequest;
+import com.cn.common.module.player.request.LoginRequest;
+import com.cn.common.module.player.request.RegisterRequest;
 import com.cn.common.module.player.response.PlayerResponse;
 /**
  * 玩家模块

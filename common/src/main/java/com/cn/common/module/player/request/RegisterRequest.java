@@ -1,4 +1,4 @@
-package com.cn.common.module.player.message;
+package com.cn.common.module.player.request;
 
 import com.cn.common.core.serial.Serializer;
 
