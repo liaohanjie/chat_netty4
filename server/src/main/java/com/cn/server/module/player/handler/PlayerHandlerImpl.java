@@ -1,14 +1,12 @@
 package com.cn.server.module.player.handler;
 
-import io.netty.channel.Channel;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
 import com.cn.common.core.exception.ErrorCodeException;
 import com.cn.common.core.model.Result;
 import com.cn.common.core.model.ResultCode;
+import com.cn.common.core.session.Session;
 import com.cn.common.module.player.message.LoginRequest;
 import com.cn.common.module.player.message.RegisterRequest;
 import com.cn.common.module.player.response.PlayerResponse;
@@ -25,7 +23,7 @@ public class PlayerHandlerImpl implements PlayerHandler{
 	private PlayerService playerService;
 
 	@Override
-	public Result<PlayerResponse> registerAndLogin(Channel channel, byte[] data) {
+	public Result<PlayerResponse> registerAndLogin(Session session, byte[] data) {
 		
 		PlayerResponse result = null;
 		try {
@@ -39,7 +37,7 @@ public class PlayerHandlerImpl implements PlayerHandler{
 			}
 			
 			//执行业务
-			result = playerService.registerAndLogin(channel, registerRequest.getPlayerName(), registerRequest.getPassward());
+			result = playerService.registerAndLogin(session, registerRequest.getPlayerName(), registerRequest.getPassward());
 		} catch (ErrorCodeException e) {
 			return Result.ERROR(e.getErrorCode());
 		} catch (Exception e) {
@@ -50,7 +48,7 @@ public class PlayerHandlerImpl implements PlayerHandler{
 	}
 
 	@Override
-	public Result<PlayerResponse> login(Channel channel, byte[] data) {
+	public Result<PlayerResponse> login(Session session, byte[] data) {
 		PlayerResponse result = null;
 		try {
 			//反序列化
@@ -63,7 +61,7 @@ public class PlayerHandlerImpl implements PlayerHandler{
 			}
 			
 			//执行业务
-			result = playerService.login(channel, loginRequest.getPlayerName(), loginRequest.getPassward());
+			result = playerService.login(session, loginRequest.getPlayerName(), loginRequest.getPassward());
 		} catch (ErrorCodeException e) {
 			return Result.ERROR(e.getErrorCode());
 		} catch (Exception e) {

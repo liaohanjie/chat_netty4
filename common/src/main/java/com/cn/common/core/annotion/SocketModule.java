@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * 请求模块
- * @author fansth
+ * @author -琴兽-
  *
  */
 @Target(ElementType.TYPE)

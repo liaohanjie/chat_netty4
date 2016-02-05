@@ -1,18 +1,14 @@
 package com.cn.server.module.player.service;
 
-import io.netty.channel.Channel;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.cn.common.core.exception.ErrorCodeException;
 import com.cn.common.core.model.ResultCode;
+import com.cn.common.core.session.Session;
+import com.cn.common.core.session.SessionManager;
 import com.cn.common.module.player.response.PlayerResponse;
-import com.cn.server.channel.ChannelManager;
-import com.cn.server.constant.AttrKeys;
 import com.cn.server.module.player.dao.PlayerDao;
 import com.cn.server.module.player.dao.entity.Player;
-
 /**
  * 玩家服务
  * 
@@ -26,7 +22,7 @@ public class PlayerServiceImpl implements PlayerService {
 	private PlayerDao playerDao;
 
 	@Override
-	public PlayerResponse registerAndLogin(Channel channel, String playerName, String passward) {
+	public PlayerResponse registerAndLogin(Session session, String playerName, String passward) {
 
 		Player existplayer = playerDao.getPlayerByName(playerName);
 
@@ -42,14 +38,14 @@ public class PlayerServiceImpl implements PlayerService {
 		player = playerDao.createPlayer(player);
 
 		//顺便登录
-		return login(channel, playerName, passward);
+		return login(session, playerName, passward);
 	}
 
 	@Override
-	public PlayerResponse login(Channel channel, String playerName, String passward) {
+	public PlayerResponse login(Session session, String playerName, String passward) {
 
 		// 判断当前会话是否已登录
-		if (channel.attr(AttrKeys.PLAYER_KEY).get() != null) {
+		if (session.getAttachment() != null) {
 			throw new ErrorCodeException(ResultCode.HAS_LOGIN);
 		}
 
@@ -65,17 +61,17 @@ public class PlayerServiceImpl implements PlayerService {
 		}
 
 		// 判断是否在其他地方登录过
-		boolean onlinePlayer = ChannelManager.isOnlinePlayer(player.getPlayerId());
+		boolean onlinePlayer = SessionManager.isOnlinePlayer(player.getPlayerId());
 		if (onlinePlayer) {
-			Channel oldChannel = ChannelManager.removeChannel(player.getPlayerId());
-			oldChannel.attr(AttrKeys.PLAYER_KEY).remove();
+			Session oldSession = SessionManager.removeSession(player.getPlayerId());
+			oldSession.removeAttachment();
 			// 踢下线
-			oldChannel.close();
+			oldSession.close();
 		}
 
 		// 加入在线玩家会话
-		if (ChannelManager.putChannel(player.getPlayerId(), channel)) {
-			channel.attr(AttrKeys.PLAYER_KEY).set(player);
+		if (SessionManager.putSession(player.getPlayerId(), session)) {
+			session.setAttachment(player);
 		} else {
 			throw new ErrorCodeException(ResultCode.LOGIN_FAIL);
 		}

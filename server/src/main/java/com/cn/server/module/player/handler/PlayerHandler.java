@@ -1,10 +1,9 @@
 package com.cn.server.module.player.handler;
 
-import io.netty.channel.Channel;
-
 import com.cn.common.core.annotion.SocketCommand;
 import com.cn.common.core.annotion.SocketModule;
 import com.cn.common.core.model.Result;
+import com.cn.common.core.session.Session;
 import com.cn.common.module.ModuleId;
 import com.cn.common.module.player.PlayerCmd;
 import com.cn.common.module.player.message.LoginRequest;
@@ -26,7 +25,7 @@ public interface PlayerHandler {
 	 * @return
 	 */
 	@SocketCommand(cmd = PlayerCmd.REGISTER_AND_LOGIN)
-	public Result<PlayerResponse> registerAndLogin(Channel channel, byte[] data);
+	public Result<PlayerResponse> registerAndLogin(Session session, byte[] data);
 	
 
 	/**
@@ -36,6 +35,6 @@ public interface PlayerHandler {
 	 * @return
 	 */
 	@SocketCommand(cmd = PlayerCmd.LOGIN)
-	public Result<PlayerResponse> login(Channel channel, byte[] data);
+	public Result<PlayerResponse> login(Session session, byte[] data);
 
 }
